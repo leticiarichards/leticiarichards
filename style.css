@@ -1,0 +1,154 @@
+/* ===== Watt on Earth? — site styles =====
+   Change the colours here and they update on every page. */
+:root {
+  --green: #2F6B1F;        /* main brand green (matches business card) */
+  --green-dark: #1F4A14;   /* hover colour */
+  --green-light: #E6EEDD;  /* soft background tint */
+  --ink: #1E2619;          /* main text */
+  --muted: #4E5949;        /* secondary text */
+  --page: #F6F7F2;         /* page background */
+  --line: #DCE3D3;         /* borders */
+  --white: #FFFFFF;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Figtree", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--page);
+  line-height: 1.55;
+}
+
+a { color: var(--green); }
+a:hover { color: var(--green-dark); }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+.display {
+  font-family: "Alegreya Sans SC", sans-serif;
+  font-weight: 800;
+  color: var(--green);
+  letter-spacing: 0.5px;
+}
+
+/* ----- Header ----- */
+.site-header { background: var(--white); border-bottom: 1px solid var(--line); }
+.site-header .wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px;
+}
+.brand { font-size: 28px; text-decoration: none; }
+.nav { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.nav a { font-weight: 600; text-decoration: none; }
+.nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: 6px; }
+.profile-icon {
+  display: block; width: 48px; height: 48px; border-radius: 50%;
+  border: 2px solid var(--green); overflow: hidden; background: var(--white);
+}
+.profile-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ----- Homepage hero + search ----- */
+.hero { text-align: center; padding: 56px 0 24px; }
+.hero-logo { width: 128px; height: 128px; object-fit: contain; border-radius: 50%; }
+.hero h1 { font-size: 56px; line-height: 1.05; margin: 12px 0; }
+.hero p { font-size: 19px; color: #3B4636; max-width: 640px; margin: 0 auto; }
+.rule { width: 72px; height: 5px; background: var(--green); border-radius: 3px; margin: 20px auto 0; }
+
+.search { max-width: 640px; margin: 32px auto 0; text-align: left; }
+.search label { display: block; font-weight: 600; color: var(--green); margin-bottom: 8px; }
+.search-box {
+  display: flex; align-items: center; gap: 12px; background: var(--white);
+  border: 2px solid var(--green); border-radius: 999px; padding: 0 8px 0 20px; min-height: 56px;
+}
+.search-box input {
+  flex: 1; min-width: 0; border: 0; outline: none; font: inherit; font-size: 18px;
+  background: transparent; padding: 14px 0; color: var(--ink);
+}
+.search-box:focus-within { box-shadow: 0 0 0 4px var(--green-light); }
+
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; }
+.chip, .btn-soft {
+  font: inherit; font-weight: 600; font-size: 15px; cursor: pointer;
+  border: 1.5px solid var(--green); border-radius: 999px; padding: 10px 18px; min-height: 44px;
+  background: var(--white); color: var(--green);
+}
+.chip[aria-pressed="true"] { background: var(--green); color: var(--white); }
+.btn-soft { background: var(--green-light); border-color: transparent; }
+
+/* ----- Article cards ----- */
+.results { padding: 24px 0 72px; }
+.results-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 24px;
+}
+.results-head h2 { margin: 0; font-size: 30px; color: var(--ink); }
+.results-head p { margin: 0; color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.card {
+  background: var(--white); border: 1px solid var(--line); border-radius: 16px;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.card-img { height: 180px; background: var(--green-light); position: relative; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-img .placeholder {
+  position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 16px;
+  font-family: "Alegreya Sans SC", sans-serif; font-weight: 800; font-size: 26px; color: var(--green);
+}
+.card-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.card-meta { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; color: var(--muted); }
+.card h3 { margin: 0; font-size: 20px; line-height: 1.3; }
+.card h3 a { color: var(--ink); text-decoration: none; }
+.card h3 a:hover { color: var(--green); }
+.card-excerpt { margin: 0; color: #3B4636; flex: 1; }
+.card-link { font-weight: 700; text-decoration: none; }
+
+.empty {
+  background: var(--white); border: 1px dashed #A9B8A0; border-radius: 16px;
+  padding: 40px 24px; text-align: center;
+}
+
+/* ----- Simple content pages (About, Contact, Articles) ----- */
+.page { max-width: 760px; margin: 0 auto; padding: 56px 24px 72px; }
+.page h1 { font-size: 48px; margin: 0 0 16px; }
+.page h2 { color: var(--green); margin-top: 36px; }
+.about-top { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-bottom: 24px; }
+.about-top img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--green); background: var(--white); }
+
+.form { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+.form label { font-weight: 600; }
+.form input, .form textarea {
+  width: 100%; font: inherit; padding: 12px 14px; border: 1.5px solid #A9B8A0;
+  border-radius: 10px; background: var(--white); color: var(--ink);
+}
+.form input:focus, .form textarea:focus { outline: 3px solid var(--green-light); border-color: var(--green); }
+.btn {
+  align-self: flex-start; font: inherit; font-weight: 700; color: var(--white); background: var(--green);
+  border: 0; border-radius: 999px; padding: 12px 24px; min-height: 44px; cursor: pointer;
+}
+.btn:hover { background: var(--green-dark); }
+
+.article-meta { color: var(--muted); font-weight: 600; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 24px; }
+.tag { background: var(--green-light); color: var(--green); font-weight: 600; font-size: 14px; border-radius: 999px; padding: 4px 12px; text-decoration: none; }
+.article-hero { width: 100%; border-radius: 16px; margin: 8px 0 8px; }
+.caption { font-size: 14px; color: var(--muted); margin-top: 0; }
+
+/* ----- Footer ----- */
+.site-footer { background: var(--green); color: var(--white); }
+.site-footer .wrap {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding-top: 28px; padding-bottom: 28px;
+}
+.site-footer a { color: var(--white); font-weight: 600; text-decoration: none; margin-left: 20px; }
+.site-footer a:first-child { margin-left: 0; }
+.site-footer p { margin: 0; }
+
+/* ----- Phones ----- */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 42px; }
+  .page h1 { font-size: 36px; }
+  .nav { gap: 16px; }
+}

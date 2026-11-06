@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Watt on Earth? | Energy opinion by Leticia Richards</title>
+  <meta name="description" content="Opinion on energy policy, investment and supply chains across borders, by Leticia Richards.">
+  <link rel="icon" href="images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@800&family=Figtree:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand display" href="index.html">Watt on Earth?</a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html" aria-current="page">Articles</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a class="profile-icon" href="about.html" aria-label="About me">
+          <img src="images/logo.png" alt="">
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <img class="hero-logo" src="images/logo.png" alt="Line drawing of wind turbines on a hill, with a cow and a bicycle by a fence">
+      <h1 class="display">Watt on Earth?</h1>
+      <p>Opinion on energy policy, investment and supply chains across borders, by Leticia Richards</p>
+      <div class="rule"></div>
+
+      <form class="search" role="search" onsubmit="return false;">
+        <label for="country-search">Search by country</label>
+        <div class="search-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6B1F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input id="country-search" type="search" placeholder="Try Brazil, UK, China…" autocomplete="off">
+          <button type="button" class="btn-soft" id="clear-btn" hidden>Clear</button>
+        </div>
+      </form>
+
+      <div class="chips" id="chips" aria-label="Countries"></div>
+    </section>
+
+    <section class="results wrap">
+      <div class="results-head">
+        <h2 class="display" id="results-title">Latest articles</h2>
+        <p id="results-count" aria-live="polite"></p>
+      </div>
+      <div class="empty" id="empty" hidden>
+        <p><strong>No articles on that country yet.</strong></p>
+        <p>Try another country, or <a href="#" id="show-all">browse everything</a>.</p>
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© Leticia Richards · Independent analysis. Views are my own.</p>
+      <div>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="https://linkedin.com/in/leticia-richards">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="posts.js"></script>
+  <script>
+    // ===== Country search — you shouldn't need to edit anything below =====
+    const input = document.getElementById("country-search");
+    const grid = document.getElementById("grid");
+    const chipsBox = document.getElementById("chips");
+    const empty = document.getElementById("empty");
+    const title = document.getElementById("results-title");
+    const count = document.getElementById("results-count");
+    const clearBtn = document.getElementById("clear-btn");
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    function matches(post, q) {
+      if (!q) return true;
+      return post.countries.some(c => {
+        const name = c.toLowerCase();
+        const aliases = COUNTRY_ALIASES[name] || [];
+        return name.includes(q) || aliases.some(a => a === q || a.startsWith(q));
+      }) || post.title.toLowerCase().includes(q);
+    }
+
+    function card(post) {
+      const img = post.image
+        ? `<img src="${esc(post.image)}" alt="">`
+        : `<span class="placeholder">${esc(post.countries[0] || "")}</span>`;
+      return `
+        <article class="card">
+          <div class="card-img">${img}</div>
+          <div class="card-body">
+            <p class="card-meta">${esc(post.countries.join(" · "))} · ${esc(post.date)}</p>
+            <h3><a href="${esc(post.link)}">${esc(post.title)}</a></h3>
+            <p class="card-excerpt">${esc(post.excerpt)}</p>
+            <a class="card-link" href="${esc(post.link)}">Read the piece →</a>
+          </div>
+        </article>`;
+    }
+
+    function render() {
+      const raw = input.value.trim();
+      const q = raw.toLowerCase();
+      const found = POSTS.filter(p => matches(p, q));
+      grid.innerHTML = found.map(card).join("");
+      empty.hidden = found.length !== 0;
+      clearBtn.hidden = !raw;
+      title.textContent = raw ? "Articles: " + raw : "Latest articles";
+      count.textContent = found.length === 1 ? "1 article" : found.length + " articles";
+      document.querySelectorAll(".chip").forEach(ch => {
+        ch.setAttribute("aria-pressed", (ch.dataset.value.toLowerCase() === q) ? "true" : "false");
+      });
+    }
+
+    function buildChips() {
+      const all = [...new Set(POSTS.flatMap(p => p.countries))].sort();
+      const names = ["All", ...all];
+      chipsBox.innerHTML = names.map(n =>
+        `<button type="button" class="chip" data-value="${n === "All" ? "" : esc(n)}">${esc(n)}</button>`
+      ).join("");
+      chipsBox.querySelectorAll(".chip").forEach(ch => {
+        ch.addEventListener("click", () => { input.value = ch.dataset.value; render(); });
+      });
+    }
+
+    input.addEventListener("input", render);
+    clearBtn.addEventListener("click", () => { input.value = ""; render(); input.focus(); });
+    document.getElementById("show-all").addEventListener("click", e => { e.preventDefault(); input.value = ""; render(); });
+
+    // Lets you share links like wattonearth.uk/?country=Brazil
+    const fromLink = new URLSearchParams(location.search).get("country");
+    if (fromLink) input.value = fromLink;
+
+    buildChips();
+    render();
+  </script>
+</body>
+</html>
